@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "secfilr"
+version = "0.1.0"
+dependencies = [
+    "pandas",
+    "platformdirs",
+    "pydantic",
+    "python-dotenv",
+    "requests"
+]
+requires-python = ">=3.11"
+authors = [
+    { name="Ryan A. Rashidian", email="ryanrashidian@protonmail.com" },
+]
+description = "Python wrapper for SEC EDGAR API"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+
+[project.urls]
+Homepage = "https://github.com/ryan-rashidian/secfilr"
+Issues = "https://github.com/ryan-rashidian/secfilr/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 79
+target-version = "py313"
+lint.select = ["E", "F", "W", "I", "B"]
+

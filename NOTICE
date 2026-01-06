@@ -1,0 +1,19 @@
+secfilr - Copyright 2025 Ryan A. Rashidian
+
+This software includes third-party software under the following licenses:
+
+- pandas: Licensed under the BSD 3-Clause License.
+  https://pandas.pydata.org/docs/getting_started/overview.html#license
+
+- platformdirs: Licensed under the MIT License.
+  https://github.com/tox-dev/platformdirs/blob/main/LICENSE
+
+- pydantic: Licensed under the MIT License.
+  https://github.com/pydantic/pydantic/blob/main/LICENSE
+
+- python-dotenv: Licensed under the BSD 3-Clause License.
+  https://github.com/theskumar/python-dotenv/blob/master/LICENSE
+
+- requests: Licensed under the Apache License 2.0.
+  https://github.com/psf/requests/blob/main/LICENSE
+
