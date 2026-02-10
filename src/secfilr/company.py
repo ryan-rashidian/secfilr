@@ -7,10 +7,10 @@ and any processing and parsing that secfilr may do.
 from enum import StrEnum
 
 from secfilr import _xbrl_labels
-from secfilr.exceptions import ParsingError, InvalidMetric
-from secfilr.fetch import Fetch
 from secfilr._models import CompanyFacts, Facts, Metric
 from secfilr._parse import ParseMetric as _ParseMetric
+from secfilr.exceptions import InvalidMetric, ParsingError
+from secfilr.fetch import Fetch
 
 
 class StatementType(StrEnum):

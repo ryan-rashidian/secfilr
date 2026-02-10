@@ -3,8 +3,8 @@
 Parse concepts into categorized metrics defined by secfilr.
 """
 
-from secfilr.exceptions import ParsingError
 from secfilr._models import Metric
+from secfilr.exceptions import ParsingError
 
 
 class ParseMetric:

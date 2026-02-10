@@ -3,15 +3,15 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 
-from secfilr._network import make_request
-from secfilr._urls import EDGAR_CIK_URL, EDGAR_FACTS_URL
-from secfilr.exceptions import FetchError
 from secfilr._models import (
     CompanyCIK,
     CompanyFacts,
     decode_cik_json,
     decode_companyfacts_json,
 )
+from secfilr._network import make_request
+from secfilr._urls import EDGAR_CIK_URL, EDGAR_FACTS_URL
+from secfilr.exceptions import FetchError
 
 
 class Fetch(ABC):

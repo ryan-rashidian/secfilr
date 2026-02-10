@@ -4,8 +4,8 @@ Pydantic models based on the shape of JSON filing data from SEC EDGAR.
 `Concept` dataclass for parsed metric
 """
 
-from dataclasses import dataclass, field
 import json
+from dataclasses import dataclass, field
 
 from pydantic import BaseModel, Field, ValidationError
 
