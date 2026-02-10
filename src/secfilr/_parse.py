@@ -24,7 +24,7 @@ class ParseMetric:
             raise InvalidMetric(f'{metric} is undefined') from e
 
     def _map_to_metric(self, xbrl_mappings: tuple[str]) -> dict:
-        """Map XBRL labels to categorized metrics."""
+        """Map XBRL labels to categorized metric."""
         for map in xbrl_mappings:
             if map not in self.raw_facts:
                 continue
@@ -38,17 +38,7 @@ class ParseMetric:
         return next(iter(units_dict))
 
     def parse(self, metric: str) -> Metric:
-        """Get parsed Concept from an xbrl_mapping.
-
-        Args:
-            xbrl_mappings (tuple[str]): Concept mapping container
-
-        Returns:
-            Concept: Parsed concept data
-
-        Raises:
-            ParsingError: If parsing fails
-        """
+        """Get parsed Concept from an xbrl_mapping."""
         xbrl_mapping = self._get_mappings(metric.lower())
         concept: dict = self._map_to_metric(xbrl_mapping)
         label: str = concept.get('label', '')
@@ -60,7 +50,6 @@ class ParseMetric:
             f for f in concept_files if 'frame' in f.keys()
         ]
         return Metric(
-            metric = metric,
             label = label,
             description = description,
             unit = unit,

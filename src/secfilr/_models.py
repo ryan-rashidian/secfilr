@@ -66,14 +66,13 @@ def decode_companyfacts_json(json_str: str) -> CompanyFacts:
 @dataclass
 class Metric:
     """Container for a parsed metric and metadata."""
-    metric: str
     label: str
     description: str
     unit: str
     filings: list[dict] = field(default_factory=list)
 
     def __repr__(self) -> str:
-        return f"Metric(metric={self.metric}, label='{self.label}')"
+        return f"Metric(label='{self.label}')"
 
     def __len__(self) -> int:
         return len(self.filings)
