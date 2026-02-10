@@ -80,7 +80,7 @@ class Company:
     def statement(
         self,
         statement_t: StatementType,
-        quarter_off: int = 1
+        quarter_off: int = 0
     ) -> dict:
         """Build a statement from parsed metrics."""
         parser = _ParseMetric(self.facts.concepts)
@@ -90,7 +90,7 @@ class Company:
         for concept, labels in _xbrl_labels.statements[statement_t].items():
             try:
                 parsed_metric: Metric = parser.parse(labels)
-                latest_filing: dict = parsed_metric.filings[-quarter_off]
+                latest_filing: dict = parsed_metric.filings[-(quarter_off+1)]
                 value = latest_filing.get('val')
                 form = latest_filing.get('form')
                 filed = latest_filing.get('filed')
