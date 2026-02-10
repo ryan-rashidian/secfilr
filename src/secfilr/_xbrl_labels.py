@@ -286,7 +286,7 @@ income_statement = {
 }
 
 # Nested dictionary of all tags
-filing_tags = {
+statements = {
     'Balance Sheet': balance_sheet,
     'Cash Flow Statement': cash_flow_statement,
     'Income Statement': income_statement

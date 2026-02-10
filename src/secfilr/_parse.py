@@ -19,7 +19,7 @@ class ParseMetric:
         """Get matching tuple for concept mapping."""
         try:
             section, label = _xbrl_labels.map_arg[metric]
-            return _xbrl_labels.filing_tags[section][label]
+            return _xbrl_labels.statements[section][label]
         except KeyError as e:
             raise InvalidMetric(f'{metric} is undefined') from e
 
