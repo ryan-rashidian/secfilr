@@ -24,6 +24,12 @@ class Company:
         self.ticker = ticker.strip().upper()
         self.name = companyfacts.name
 
+    def __repr__(self) -> str:
+        return f'SECfilr({self.ticker})'
+
+    def __str__(self) -> str:
+        return f'[SECfilr]: ticker = {self.ticker} | name = {self.name}'
+
     def concept(self, concept: str) -> dict | None:
         """Get a raw concept.
 
