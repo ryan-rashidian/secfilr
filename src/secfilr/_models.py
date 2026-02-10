@@ -9,7 +9,7 @@ import json
 
 from pydantic import BaseModel, Field, ValidationError
 
-from .exceptions import FileDecodeError, TickerNotFound
+from secfilr.exceptions import FileDecodeError, TickerNotFound
 
 
 class CompanyCIK(BaseModel):

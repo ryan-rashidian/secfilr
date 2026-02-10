@@ -4,7 +4,7 @@ from pathlib import Path
 
 import requests
 
-from .exceptions import DownloadError, RequestError
+from secfilr.exceptions import DownloadError, RequestError
 
 
 def make_request(

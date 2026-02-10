@@ -5,8 +5,8 @@ import pathlib
 import shutil
 import zipfile
 
-from ._network import download_files as _download_files
-from ._network import make_request as _make_request
+from secfilr._network import download_files as _download_files
+from secfilr._network import make_request as _make_request
 from ._urls import EDGAR_CIK_URL, EDGAR_ZIP_URL
 
 

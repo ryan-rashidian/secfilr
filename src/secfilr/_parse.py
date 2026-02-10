@@ -3,9 +3,9 @@
 Parse concepts into categorized metrics defined by secfilr.
 """
 
-from . import _xbrl_labels
-from .exceptions import ParsingError, InvalidMetric
-from ._models import Metric
+from secfilr import _xbrl_labels
+from secfilr.exceptions import ParsingError, InvalidMetric
+from secfilr._models import Metric
 
 
 class ParseMetric:
