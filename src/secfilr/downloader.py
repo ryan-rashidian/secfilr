@@ -11,17 +11,17 @@ from secfilr._urls import EDGAR_CIK_URL, EDGAR_ZIP_URL
 
 
 class Downloader:
-    """Bulk filing data downloader."""
+    """Bulk filing data downloader.
+
+    Args:
+        user_agent (str): EDGAR API user-agent credential
+        dest_path (Path): destination directory for bulk data
+    """
 
     def __init__(self, user_agent: str, dest_path: pathlib.Path):
-        """Initialize paths.
-
-        Args:
-            user_agent (str): EDGAR API user-agent credential
-            dest_path (Path): destination directory for bulk data
-        """
+        """Initialize paths."""
         # Build paths from dest_path root
-        self.path_dest_dir = dest_path / 'bulk_data'
+        self.path_dest_dir = dest_path / 'bulkdata'
         self.path_dest_dir.mkdir(exist_ok=True)
         self.path_facts_zip = self.path_dest_dir / 'companyfacts.zip'
         self.path_facts_unzipped = self.path_dest_dir / 'companyfacts'
@@ -32,8 +32,8 @@ class Downloader:
     def _download_cik_mapping(self) -> None:
         """Download CIK file for mapping ticker symbols."""
         cik_data = _make_request(
-            url=EDGAR_CIK_URL,
-            headers=self.headers
+            url = EDGAR_CIK_URL,
+            headers = self.headers
         )
         with open(self.path_tickers_json, 'w') as f:
             json.dump(json.loads(cik_data), f)
@@ -43,7 +43,7 @@ class Downloader:
         _download_files(
             url = EDGAR_ZIP_URL,
             headers = self.headers,
-            dest_path = self.path_dest_dir
+            dest_path = self.path_facts_zip
         )
 
     def _unzip_companyfacts(self) -> None:

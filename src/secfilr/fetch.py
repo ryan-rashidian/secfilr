@@ -76,7 +76,7 @@ class FetchRequest(Fetch):
         cik_json: str = make_request(url=EDGAR_CIK_URL, headers=self.headers)
         cik_data: CompanyCIK = decode_cik_json(cik_json, ticker=ticker_fmt)
         cik = str(cik_data.cik).zfill(10)
-        cik_facts_url = f'{EDGAR_FACTS_URL}CIK{cik}.json'
+        cik_facts_url = f'{EDGAR_FACTS_URL}{cik}.json'
         companyfacts_json: str = make_request(
             url=cik_facts_url,
             headers=self.headers
