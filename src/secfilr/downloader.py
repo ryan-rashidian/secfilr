@@ -1,85 +1,72 @@
-"""Bulk data download manager for secfilr.
+"""Contains the `Downloader` class for downloading bulk filing data."""
 
-Download or remove bulk filing data from SEC EDGAR.
-Size: ~20GB
-"""
+import json
+import pathlib
+import shutil
+import zipfile
 
-from json import dump, loads
-from shutil import rmtree
-from zipfile import ZipFile
-
-from secfilr._networking import download_files, make_request
-from secfilr.config._paths import (
-    BULK_DATA_DIR,
-    COMPANY_TICKERS_JSON,
-    COMPANYFACTS_UNZIPPED,
-    COMPANYFACTS_ZIP,
-)
-from secfilr.config._urls import EDGAR_CIK_URL, EDGAR_ZIP_URL
-from secfilr.config.credentials import require_credential
+from ._network import download_files as _download_files
+from ._network import make_request as _make_request
+from ._urls import EDGAR_CIK_URL, EDGAR_ZIP_URL
 
 
-def _ensure_bulk_dir() -> None:
-    """Ensure that the bulk_data directory exists."""
-    BULK_DATA_DIR.mkdir(parents=True, exist_ok=True)
+class Downloader:
+    """Bulk filing data downloader."""
 
+    def __init__(self, user_agent: str, dest_path: pathlib.Path):
+        """Initialize paths.
 
-def _edgar_headers() -> dict[str, str]:
-    """Return headers dict containing the EDGAR User-Agent."""
-    cred = require_credential(service='EDGAR', env_var='EDGAR_USER_AGENT')
-    return {'User-Agent': cred}
+        Args:
+            user_agent (str): EDGAR API user-agent credential
+            dest_path (Path): destination directory for bulk data
+        """
+        # Build paths from dest_path root
+        self.path_dest_dir = dest_path / 'bulk_data'
+        self.path_dest_dir.mkdir(exist_ok=True)
+        self.path_facts_zip = self.path_dest_dir / 'companyfacts.zip'
+        self.path_facts_unzipped = self.path_dest_dir / 'companyfacts'
+        self.path_tickers_json = self.path_dest_dir / 'company_tickers.json'
+        # Build EDGAR API header
+        self.headers = {'User-Agent': user_agent}
 
+    def _download_cik_mapping(self) -> None:
+        """Download CIK file for mapping ticker symbols."""
+        cik_data = _make_request(
+            url=EDGAR_CIK_URL,
+            headers=self.headers
+        )
+        with open(self.path_tickers_json, 'w') as f:
+            json.dump(json.loads(cik_data), f)
 
-def download_cik_mapping() -> None:
-    """SEC EDGAR company_tickers.json bulk data downloader.
+    def _download_companyfacts_zip(self) -> None:
+        """Download the bulk companyfacts zip file."""
+        _download_files(
+            url = EDGAR_ZIP_URL,
+            headers = self.headers,
+            dest_path = self.path_dest_dir
+        )
 
-    Contains CIK mapping data for all tickers.
-    """
-    _ensure_bulk_dir()
-    headers = _edgar_headers()
-    cik_data = make_request(url=EDGAR_CIK_URL, headers=headers)
-    with open(COMPANY_TICKERS_JSON, 'w') as f:
-        dump(loads(cik_data), f)
+    def _unzip_companyfacts(self) -> None:
+        """Un-zip companyfacts."""
+        with zipfile.ZipFile(self.path_facts_zip, 'r') as zip:
+            zip.extractall(self.path_facts_unzipped)
 
+    def remove(self) -> None:
+        """Remove all bulk data files."""
+        for path in [
+            self.path_tickers_json,
+            self.path_facts_zip,
+            self.path_facts_unzipped
+        ]:
+            if path.exists():
+                if path.is_dir():
+                    shutil.rmtree(path)
+                else:
+                    path.unlink()
 
-def download_companyfacts_zip() -> None:
-    """SEC EDGAR companyfacts.zip bulk data downloader.
-
-    Contains companyfacts.json for all companies by CIK.
-    """
-    _ensure_bulk_dir()
-    headers = _edgar_headers()
-    download_files(
-        url = EDGAR_ZIP_URL,
-        headers = headers,
-        dest_path = COMPANYFACTS_ZIP
-    )
-
-
-def unzip_companyfacts() -> None:
-    """Un-zip companyfacts.zip folder."""
-    with ZipFile(COMPANYFACTS_ZIP, 'r') as zip:
-        zip.extractall(COMPANYFACTS_UNZIPPED)
-
-
-def delete_bulk_data() -> None:
-    """Remove all existing SEC bulk data files and directories."""
-    for path in [
-        COMPANYFACTS_ZIP,
-        COMPANYFACTS_UNZIPPED,
-        COMPANY_TICKERS_JSON
-    ]:
-        if path.exists():
-            if path.is_dir():
-                rmtree(path)
-            else:
-                path.unlink()
-
-
-def refresh_bulk_data() -> None:
-    """Delete old data, download bulk files, and unzip companyfacts."""
-    delete_bulk_data()
-    download_cik_mapping()
-    download_companyfacts_zip()
-    unzip_companyfacts()
+    def download(self) -> None:
+        """Download CIK mapping, bulk files, and unzip companyfacts."""
+        self._download_cik_mapping()
+        self._download_companyfacts_zip()
+        self._unzip_companyfacts()
 

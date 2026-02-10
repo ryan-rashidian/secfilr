@@ -1,57 +1,43 @@
-"""Concept parsing and mapping.
+"""Metric Parser.
 
-Assemble Concept dataclass containers from companyfacts JSON.
+Parse concepts into categorized metrics defined by secfilr.
 """
 
-from secfilr.exceptions import ParsingError
-from secfilr.schemas import Concept
+from . import _xbrl_labels
+from .exceptions import ParsingError, InvalidMetric
+from ._models import Metric
 
 
-class ConceptParser:
-    """Concept parser for SECfilr client."""
+class ParseMetric:
+    """Metric parser."""
 
     def __init__(self, raw_facts: dict):
         """Initialize raw companyfacts data."""
         self.raw_facts = raw_facts
 
-    def _map_concept(self, xbrl_mappings: tuple[str]) -> dict:
-        """Map XBRL tags to standardized concept data.
+    def _get_mappings(self, metric: str) -> tuple[str]:
+        """Get matching tuple for concept mapping."""
+        try:
+            section, label = _xbrl_labels.map_arg[metric]
+            return _xbrl_labels.filing_tags[section][label]
+        except KeyError as e:
+            raise InvalidMetric(f'{metric} is undefined') from e
 
-        Args:
-            xbrl_mappings (tuple[str]): Concept mapping container
-
-        Returns:
-            dict: Of filing data for specific concept
-
-        Raises:
-            ClientParsingError: If no matches are found
-        """
+    def _map_to_metric(self, xbrl_mappings: tuple[str]) -> dict:
+        """Map XBRL labels to categorized metrics."""
         for map in xbrl_mappings:
             if map not in self.raw_facts:
                 continue
-
             return self.raw_facts[map]
-
         raise ParsingError('Mapping: No matches found.')
 
     def _get_units(self, units_dict: dict | None) -> str:
-        """Get unit key value for concept.
-
-        Args:
-            units_dict (dict | None): Concept 'units' dict
-
-        Returns:
-            str: Of unit key value
-
-        Raises:
-            ParsingError: If there is no data
-        """
+        """Get unit key value for concept."""
         if not units_dict:
             raise ParsingError('Filing data not found.')
-
         return next(iter(units_dict))
 
-    def parse(self, xbrl_mapping: tuple[str]) -> Concept:
+    def parse(self, metric: str) -> Metric:
         """Get parsed Concept from an xbrl_mapping.
 
         Args:
@@ -59,18 +45,22 @@ class ConceptParser:
 
         Returns:
             Concept: Parsed concept data
+
+        Raises:
+            ParsingError: If parsing fails
         """
-        concept: dict = self._map_concept(xbrl_mapping)
+        xbrl_mapping = self._get_mappings(metric.lower())
+        concept: dict = self._map_to_metric(xbrl_mapping)
         label: str = concept.get('label', '')
         description: str = concept.get('description', '')
         unit: str = self._get_units(concept.get('units'))
-
         concept_files: list = concept['units'][unit]
+        # Avoid duplicate filings
         concept_files_parsed = [
             f for f in concept_files if 'frame' in f.keys()
         ]
-
-        return Concept(
+        return Metric(
+            metric = metric,
             label = label,
             description = description,
             unit = unit,
