@@ -8,8 +8,10 @@ Python API for SEC EDGAR.
 ## Features
 
 - Pythonic API for accessing SEC EDGAR filings
+- SEC bulk data download helper
 - Choice between using requests, or bulk-data as the data source
-- Mapping of GAAP concepts into generalized, named 'metric' categories
+- Organized statements from 10K/10Q forms
+- Mapping of GAAP concepts into generalized and named 'metric' categories
 
 ## Installation
 
@@ -21,10 +23,11 @@ pip install .
 
 ## Usage
 
-Documentation and examples are planned.
+Documentation still in progress.
 
 ## To-Do
 
-- Better exceptions and handling of parsing failure: either make it clear why the failure occurred, or simply return `Thing | None`.
-- Re-implement statements.
+- Documentation, guides, examples
+- Test `Downloader`
+- Test `FetchRequest`
 
