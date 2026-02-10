@@ -97,8 +97,8 @@ class Company:
                 statement_dict[concept] = value
             except ParsingError:
                 statement_dict[concept] = None
-        statement_dict['filed'] = filed
-        statement_dict['form'] = form
+        statement_dict['Filed'] = filed
+        statement_dict['Form'] = form
 
         return statement_dict
 
