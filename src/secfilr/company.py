@@ -21,22 +21,40 @@ class Company:
         """Initialize companyfacts and parser using given fetcher."""
         companyfacts: CompanyFacts = fetcher.companyfacts(ticker)
         self.facts: Facts = companyfacts.facts
-        self._parser = _ParseMetric(self.facts.concepts)
         self.ticker = ticker.strip().upper()
         self.name = companyfacts.name
 
     def concept(self, concept: str) -> dict | None:
-        """Get raw concept."""
+        """Get a raw concept.
+
+        Args:
+            concept (str)
+        Returns:
+            Dict: of filings for concept
+            None: if concept is not found
+        """
         if concept in self.facts.concepts:
             return self.facts.concepts[concept]
         else:
             return None
 
     def metric(self, metric: str) -> Metric:
-        """Get parsed metric."""
-        return self._parser.parse(metric)
+        """Get a parsed metric.
+
+        Args:
+            metric (str)
+        Returns:
+            Metric: dataclass for filings
+        Raises:
+            ParseError: if parsing fails
+        """
+        parser = _ParseMetric(self.facts.concepts)
+        return parser.parse(metric)
 
     def statement(self, statement: str):
-        """Get parsed statements."""
+        """Get parsed statements.
+
+        PLACEHOLDER
+        """
         pass
 
