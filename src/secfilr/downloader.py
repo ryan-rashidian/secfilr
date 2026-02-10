@@ -7,7 +7,7 @@ import zipfile
 
 from secfilr._network import download_files as _download_files
 from secfilr._network import make_request as _make_request
-from ._urls import EDGAR_CIK_URL, EDGAR_ZIP_URL
+from secfilr._urls import EDGAR_CIK_URL, EDGAR_ZIP_URL
 
 
 class Downloader:
