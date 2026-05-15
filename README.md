@@ -5,6 +5,8 @@
 
 Python API for SEC EDGAR.
 
+This project is currently not being worked on, and is in need of many refactors and improvements. I've been programming in other languages recently, and valuation fundamentals don't seem to matter in the markets right now. In the mean time, you can still pick stock tickers out of a hat. But jokes aside, I'm hoping to come back to this eventually when I have the motivation to. (2026-05-15)
+
 ## Features
 
 - Pythonic API for accessing SEC EDGAR filings
@@ -23,11 +25,9 @@ pip install .
 
 ## Usage
 
-Documentation still in progress.
+Refer to doc-strings within the source code for now.
 
 ## To-Do
 
 - Documentation, guides, examples
-- Test `Downloader`
-- Test `FetchRequest`
 
